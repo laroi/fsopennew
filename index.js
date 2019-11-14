@@ -1,5 +1,8 @@
 const express = require('express')
 const app = express()
+const bodyParser = require('body-parser')
+
+app.use(bodyParser.json())
 
 let persons = [
     {
@@ -49,7 +52,21 @@ app.delete('/api/persons/:id', (req, res) => {
         res.status(404).send();
     }
 })
-
+app.post('/api/persons', (req, res)=> {
+    const number = req.body.number;
+    const name = req.body.name;
+    if (!number) {
+        res.status(400).send({error: "number is not provided"})
+        return;
+    }
+    exists = persons.findIndex(x=>x.number===number)
+    if (exists > -1) {
+        res.status(409).send({error: 'number already exists'})
+        return;
+    }
+    persons.push({id: Math.floor(Math.random() * 1000), name: name, number: number});
+    res.status(201).send();
+})
 const PORT = 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
