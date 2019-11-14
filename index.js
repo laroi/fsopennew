@@ -39,6 +39,16 @@ app.get('/api/persons/:id', (req, res) => {
         res.status(404).send();
     }
 })
+app.delete('/api/persons/:id', (req, res) => {
+    const index = persons.findIndex(x=>x.id===parseInt(req.params.id, 10));
+    console.log(persons[index]);
+    if (index > 0) {
+        persons.splice(index, 1);
+        res.status(204).send();
+    } else {
+        res.status(404).send();
+    }
+})
 
 const PORT = 3001
 app.listen(PORT, () => {
